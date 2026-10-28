@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="SomGPT — a fast, uncensored AI chat. Powered by Token Harbor."
+    />
+    <meta property="og:title" content="SomGPT" />
+    <meta property="og:description" content="Fast, uncensored AI chat." />
+    <meta property="og:type" content="website" />
+    <title>SomGPT</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./favicon.svg" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar" aria-label="Conversations">
+        <div class="sidebar-head">
+          <a class="brand" href="./" aria-label="SomGPT home">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2.5 21 7v10l-9 4.5L3 17V7l9-4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+                <path d="M8 12.2c1.1 1.6 2.4 2.3 4 2.3s2.9-.7 4-2.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                <circle cx="9" cy="9.6" r="1" fill="currentColor" />
+                <circle cx="15" cy="9.6" r="1" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="brand-text">Som<span>GPT</span></span>
+          </a>
+          <button class="icon-btn sidebar-close" id="sidebarClose" type="button" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          </button>
+        </div>
+
+        <button class="new-chat" id="newChat" type="button">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          <span>New chat</span>
+        </button>
+
+        <div class="sidebar-label">Recent</div>
+        <nav class="chat-list" id="chatList" aria-label="Chat history"></nav>
+
+        <div class="sidebar-foot">
+          <button class="side-action" id="settingsBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" stroke="currentColor" stroke-width="1.6" /><path d="M19.4 13.5a7.6 7.6 0 0 0 .05-2.9l1.8-1.4-2-3.4-2.1.9a7.7 7.7 0 0 0-2.5-1.4L14.3 3h-4l-.35 2.3a7.7 7.7 0 0 0-2.5 1.4l-2.1-.9-2 3.4 1.8 1.4a7.6 7.6 0 0 0 0 2.9l-1.8 1.4 2 3.4 2.1-.9a7.7 7.7 0 0 0 2.5 1.4L10.3 21h4l.35-2.3a7.7 7.7 0 0 0 2.5-1.4l2.1.9 2-3.4-1.85-1.3Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" /></svg>
+            <span>Settings</span>
+          </button>
+          <div class="model-pill" id="modelPill">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="modelName">DeepSeek V4.1 Flash (Free)</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="scrim" id="scrim" hidden></div>
+
+      <div class="main">
+        <header class="topbar">
+          <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          </button>
+          <div class="topbar-title" id="topbarTitle">New chat</div>
+          <div class="topbar-actions">
+            <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle theme">
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /></svg>
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.7" /><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+            </button>
+            <button class="icon-btn" id="newChatTop" type="button" aria-label="New chat">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <main class="chat" id="chat" aria-live="polite" aria-label="Conversation">
+          <section class="empty" id="empty">
+            <div class="empty-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2.5 21 7v10l-9 4.5L3 17V7l9-4.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                <path d="M8 12.2c1.1 1.6 2.4 2.3 4 2.3s2.9-.7 4-2.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h1>What should we build today?</h1>
+            <p>Uncensored answers, straight to the point. Ask anything.</p>
+            <div class="suggestions" id="suggestions">
+              <button class="suggestion" type="button" data-prompt="Explain how HTTPS actually works, from TCP handshake to the encrypted payload.">
+                <span class="suggestion-title">Explain a hard idea</span>
+                <span class="suggestion-sub">HTTPS from handshake to payload</span>
+              </button>
+              <button class="suggestion" type="button" data-prompt="Write a production-ready retry helper in TypeScript with exponential backoff, jitter, and abort support.">
+                <span class="suggestion-title">Write real code</span>
+                <span class="suggestion-sub">Retry helper with backoff + abort</span>
+              </button>
+              <button class="suggestion" type="button" data-prompt="Write a tense, atmospheric short story about a lighthouse keeper who finds a door in the basement that wasn't there yesterday.">
+                <span class="suggestion-title">Draft a scene</span>
+                <span class="suggestion-sub">A door that wasn't there before</span>
+              </button>
+              <button class="suggestion" type="button" data-prompt="Give me a brutal, honest critique of my plan: I want to launch a SaaS in 30 days with no budget and no audience.">
+                <span class="suggestion-title">Pressure-test a plan</span>
+                <span class="suggestion-sub">Launch in 30 days, no budget</span>
+              </button>
+            </div>
+          </section>
+
+          <div class="messages" id="messages"></div>
+        </main>
+
+        <form class="composer" id="composer" autocomplete="off">
+          <div class="composer-shell">
+            <div class="composer-attachments" id="attachments" hidden></div>
+            <div class="composer-row">
+              <button class="tool-btn icon-only" id="attachBtn" type="button" aria-label="Attach image or file" title="Attach image or file">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 11.5 12.3 19a4.6 4.6 0 0 1-6.5-6.5l7.4-7.4a3.1 3.1 0 0 1 4.4 4.4l-7.4 7.4a1.55 1.55 0 0 1-2.2-2.2l6.8-6.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <textarea
+                id="input"
+                class="composer-input"
+                rows="1"
+                placeholder="Message SomGPT..."
+                aria-label="Message"
+                maxlength="100000"
+              ></textarea>
+              <div class="composer-actions">
+                <button class="tool-btn" id="agentBtn" type="button" aria-pressed="false" aria-label="Toggle terminal agent">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="m7 9 3 3-3 3M12.5 15H17" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span class="tool-label">Agent</span>
+                </button>
+                <button class="tool-btn" id="thinkingBtn" type="button" aria-pressed="false" aria-label="Toggle thinking">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18h6M10 21h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5.9 1.2.9 2V16h5.4v-.2c0-.8.3-1.5.9-2A6 6 0 0 0 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                  <span class="tool-label">Think</span>
+                </button>
+                <button class="tool-btn" id="searchBtn" type="button" aria-pressed="true" aria-label="Toggle web search">
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <span class="tool-label">Search</span>
+                </button>
+                <button class="send-btn" id="sendBtn" type="submit" aria-label="Send message" disabled>
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </button>
+                <button class="stop-btn" id="stopBtn" type="button" aria-label="Stop generating" hidden>
+                  <svg viewBox="0 0 24 24" fill="none"><rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" /></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <input type="file" id="fileInput" class="hidden-input" accept="image/*,text/*,.txt,.md,.json,.csv,.log,.py,.js,.ts,.c,.h,.cpp,.sh,.html,.css,.yaml,.yml,.xml,.ini,.toml" multiple />
+          <div class="composer-foot">
+            <span>SomGPT can make mistakes. Verify what matters.</span>
+            <span class="foot-sep">·</span>
+            <span>Enter to send, Shift + Enter for a new line</span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <dialog class="settings" id="settings" aria-labelledby="settingsTitle">
+      <form method="dialog" class="settings-card">
+        <div class="settings-head">
+          <h2 id="settingsTitle">Settings</h2>
+          <button class="icon-btn" type="submit" aria-label="Close settings">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+          </button>
+        </div>
+
+        <label class="field">
+          <span class="field-label">
+            Temperature
+            <output id="temperatureValue" for="temperature">0.8</output>
+          </span>
+          <input id="temperature" type="range" min="0" max="2" step="0.1" value="0.8" />
+          <span class="field-hint">Lower is focused, higher is more creative.</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">Max response tokens</span>
+          <input id="maxTokens" type="number" min="256" max="65536" step="256" value="4096" />
+        </label>
+
+        <div class="settings-actions">
+          <button class="btn-ghost" id="resetSettings" type="button">Reset to defaults</button>
+          <button class="btn-primary" id="saveSettings" type="submit" value="save">Save</button>
+        </div>
+
+        <div class="settings-meta">
+          <span id="settingsModel">Model: DeepSeek V4.1 Flash (Free)</span>
+          <span id="settingsStatus" class="status" data-state="unknown">Checking…</span>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="./config.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

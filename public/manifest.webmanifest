@@ -1,0 +1,19 @@
+{
+  "name": "SomGPT",
+  "short_name": "SomGPT",
+  "description": "Fast, uncensored AI chat powered by Token Harbor.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0b10",
+  "theme_color": "#0b0b10",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
