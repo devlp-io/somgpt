@@ -1237,7 +1237,6 @@ async function runDirectCompletion(chat, index, assistant, payloadMessages, sche
         assistant.content = '';
         assistant.reasoning = '';
         assistant.tools = [];
-        assistant.trace = [];
         assistant.reasonOpen = true;
         assistant.reasonStartedAt = Date.now();
         assistant.reasonMs = null;
