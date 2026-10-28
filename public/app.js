@@ -1027,6 +1027,42 @@ async function loadProfile() {
   return text;
 }
 
+// Keyless, CORS-friendly web search for direct (no-backend) mode.
+async function directSearch(query) {
+  const q = String(query || '').trim();
+  if (!q) return [];
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+      q,
+    )}&srlimit=5&format=json&origin=*`;
+    const response = await fetch(url);
+    if (!response.ok) return [];
+    const data = await response.json();
+    const hits = data?.query?.search || [];
+    const results = [];
+    for (const hit of hits.slice(0, 5)) {
+      let snippet = String(hit.snippet || '').replace(/<[^>]+>/g, '');
+      let link = `https://en.wikipedia.org/?curid=${hit.pageid}`;
+      try {
+        const summary = await fetch(
+          `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(hit.title)}`,
+        );
+        if (summary.ok) {
+          const sd = await summary.json();
+          if (sd.extract) snippet = sd.extract;
+          if (sd.content_urls?.desktop?.page) link = sd.content_urls.desktop.page;
+        }
+      } catch {
+        /* keep search snippet */
+      }
+      results.push({ title: hit.title, url: link, snippet: snippet.slice(0, 480) });
+    }
+    return results;
+  } catch {
+    return [];
+  }
+}
+
 async function streamDirect(response, assistant, scheduleRender) {
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
@@ -1141,6 +1177,29 @@ async function runDirectCompletion(chat, index, assistant, payloadMessages, sche
     const profile = await loadProfile();
     const convo = [];
     if (profile) convo.push({ role: 'system', content: profile });
+
+    if (state.settings.search) {
+      const lastUser = [...payloadMessages].reverse().find((message) => message.role === 'user');
+      const query =
+        typeof lastUser?.content === 'string'
+          ? lastUser.content
+          : Array.isArray(lastUser?.content)
+            ? lastUser.content.find((part) => part.type === 'text')?.text || ''
+            : '';
+      if (query.trim().length >= 12) {
+        assistant.trace = Array.isArray(assistant.trace) ? assistant.trace : [];
+        assistant.trace.push({ kind: 'search', query: query.trim().slice(0, 140) });
+        scheduleRender();
+        const results = await directSearch(query);
+        if (results.length) {
+          const context =
+            'Live web results for the latest question. Use them where relevant and cite the URLs:\n' +
+            results.map((r) => `- ${r.title}: ${r.snippet} (${r.url})`).join('\n');
+          convo.push({ role: 'system', content: context });
+        }
+      }
+    }
+
     convo.push(...payloadMessages);
 
     let attempt = 0;
@@ -1678,22 +1737,21 @@ function init() {
   updateSearchButton();
   updateThinkingButton();
   updateAgentButton();
-  if (DIRECT) {
-    for (const [btn, tip] of [
-      [els.searchBtn, 'Web search needs the backend (not available in direct mode)'],
-      [els.agentBtn, 'Terminal agent needs the backend (not available in direct mode)'],
-    ]) {
-      if (btn) {
-        btn.disabled = true;
-        btn.classList.remove('active');
-        btn.title = tip;
-      }
-    }
-  }
+  lockAgent();
   renderAttachments();
   renderChat();
   loadServerConfig();
   els.input.focus();
+}
+
+function lockAgent() {
+  if (!els.agentBtn) return;
+  els.agentBtn.disabled = true;
+  els.agentBtn.classList.remove('active');
+  els.agentBtn.title = 'Terminal agent — coming soon';
+  const label = els.agentBtn.querySelector('.tool-label');
+  if (label) label.textContent = 'Agent · soon';
+  state.settings.agent = false;
 }
 
 init();
