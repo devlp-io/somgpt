@@ -6,17 +6,16 @@
 //   window.SOMGPT_API_BASE = 'https://somgpt.vercel.app';
 //
 // DIRECT MODE: on static hosting (GitHub Pages) with no backend, the client can
-// talk to Token Harbor straight from the browser. Token Harbor sends permissive
-// CORS, so this works without a server — you paste your own API key once (stored
-// only in this browser's localStorage) and it is sent only to Token Harbor.
-// Set SOMGPT_DIRECT = true to force it, or leave false to auto-detect.
+// talk to the provider straight from the browser. The provider must send
+// permissive CORS (OpenRouter and Token Harbor both do). The key is injected at
+// deploy time from the SOMGPT_DIRECT_KEY Actions secret — it is NOT stored in
+// this repo. Locally you can hardcode it here (that file is gitignored? no —
+// keep secrets out of git; use the env/workflow instead).
 window.SOMGPT_API_BASE = '';
 window.SOMGPT_DIRECT = false;
-window.SOMGPT_DIRECT_BASE = 'https://tokenharbor.ai';
-window.SOMGPT_MODEL = 'deepseek-v4.1-flash:free';
+window.SOMGPT_DIRECT_BASE = 'https://openrouter.ai/api';
+window.SOMGPT_MODEL = 'deepseek/deepseek-v3.2';
 
-// WARNING: this key is embedded in the client and therefore PUBLIC on any site
-// that serves this file (GitHub Pages included) — anyone can read and abuse it.
-// Used only in direct mode. Prefer a backend (SOMGPT_API_BASE) so the key stays
-// server-side, or clear this and let users paste their own key in Settings.
-window.SOMGPT_DIRECT_KEY = 'thk_live_HRcbBKtPNWEEje9nI3bGO1CQiShmVUuiPqo2fBGmfKKaf5Tr9_Y3kwXvr6sN9bLF';
+// Injected at deploy time by .github/workflows/pages.yml from the repo secret
+// SOMGPT_DIRECT_KEY. Empty in the repo on purpose — never commit the real key.
+window.SOMGPT_DIRECT_KEY = '';

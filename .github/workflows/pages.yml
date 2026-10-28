@@ -21,6 +21,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Inject runtime config (key from secret)
+        env:
+          KEY: ${{ secrets.SOMGPT_DIRECT_KEY }}
+          BASE: ${{ vars.SOMGPT_DIRECT_BASE }}
+          MODEL: ${{ vars.SOMGPT_MODEL }}
+        run: |
+          {
+            printf "window.SOMGPT_API_BASE = '';\n"
+            printf "window.SOMGPT_DIRECT = false;\n"
+            printf "window.SOMGPT_DIRECT_BASE = '%s';\n" "${BASE:-https://openrouter.ai/api}"
+            printf "window.SOMGPT_MODEL = '%s';\n" "${MODEL:-deepseek/deepseek-v3.2}"
+            printf "window.SOMGPT_DIRECT_KEY = '%s';\n" "$KEY"
+          } > public/config.js
       - name: Upload static client
         uses: actions/upload-pages-artifact@v3
         with:
