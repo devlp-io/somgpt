@@ -19,4 +19,4 @@ window.SOMGPT_MODEL = 'deepseek-v4.1-flash:free';
 // that serves this file (GitHub Pages included) — anyone can read and abuse it.
 // Used only in direct mode. Prefer a backend (SOMGPT_API_BASE) so the key stays
 // server-side, or clear this and let users paste their own key in Settings.
-window.SOMGPT_DIRECT_KEY = 'thk_live_t6Gg6GCXuV5mo5iwAgWmwlWi3IygNUUJ0o2St-uFQyag0Zb2is2cwS65zWV5cPWj';
+window.SOMGPT_DIRECT_KEY = 'thk_live_HRcbBKtPNWEEje9nI3bGO1CQiShmVUuiPqo2fBGmfKKaf5Tr9_Y3kwXvr6sN9bLF';
