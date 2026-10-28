@@ -451,6 +451,7 @@ function hostOf(url) {
 function messageElement(message, index, isLast) {
   const node = document.createElement('div');
   node.className = `msg ${message.role}`;
+  if (message.notice) node.classList.add('notice');
   node.dataset.msgIndex = String(index);
 
   const avatar = document.createElement('div');
@@ -858,6 +859,7 @@ async function runCompletion(chat) {
     } else if (!assistant.content) {
       assistant.content = error.message || REFUSAL_MESSAGE;
       assistant.error = true;
+      if (isProviderBlock(assistant.content)) assistant.notice = true;
     } else {
       showToast(`Stream interrupted: ${error.message || 'unknown error'}`);
     }
@@ -971,6 +973,10 @@ function isRefusal(text) {
   const sample = String(text).trim().slice(0, 600);
   if (!sample) return false;
   return REFUSAL_PATTERNS.some((pattern) => pattern.test(sample));
+}
+
+function isProviderBlock(text) {
+  return /content[- ]policy|policy violation|being refused|support@tokenharbor|moderation|abuse/i.test(String(text || ''));
 }
 
 /* ---------------- direct (browser → Token Harbor) mode ---------------- */
@@ -1255,6 +1261,7 @@ async function runDirectCompletion(chat, index, assistant, payloadMessages, sche
     } else if (!assistant.content) {
       assistant.content = error.message || REFUSAL_MESSAGE;
       assistant.error = true;
+      if (isProviderBlock(assistant.content)) assistant.notice = true;
     } else {
       showToast(`Stream interrupted: ${error.message || 'unknown error'}`);
     }
