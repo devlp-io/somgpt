@@ -70,8 +70,6 @@ const els = {
   temperature: document.getElementById('temperature'),
   temperatureValue: document.getElementById('temperatureValue'),
   maxTokens: document.getElementById('maxTokens'),
-  apiKey: document.getElementById('apiKey'),
-  apiKeyField: document.getElementById('apiKeyField'),
   resetSettings: document.getElementById('resetSettings'),
   saveSettings: document.getElementById('saveSettings'),
   settingsModel: document.getElementById('settingsModel'),
@@ -1133,10 +1131,8 @@ async function runDirectCompletion(chat, index, assistant, payloadMessages, sche
 
   const key = getApiKey();
   if (!key) {
-    assistant.content = 'Add your Token Harbor API key in Settings to use the hosted build.';
+    assistant.content = 'This build is not configured. Set an API key in config.js or deploy the backend.';
     assistant.error = true;
-    showToast('Set your Token Harbor API key in Settings');
-    if (els.apiKeyField) els.apiKeyField.hidden = false;
     finish();
     return;
   }
@@ -1365,10 +1361,6 @@ function openSettings() {
   els.temperature.value = String(state.settings.temperature);
   els.temperatureValue.textContent = Number(state.settings.temperature).toFixed(1);
   els.maxTokens.value = String(state.settings.maxTokens);
-  if (els.apiKeyField) {
-    els.apiKeyField.hidden = !DIRECT;
-    if (DIRECT) els.apiKey.value = getApiKey();
-  }
   if (typeof els.settings.showModal === 'function') {
     els.settings.showModal();
   } else {
@@ -1383,9 +1375,6 @@ function saveSettings() {
     maxTokens: Math.min(65536, Math.max(256, Math.trunc(Number(els.maxTokens.value) || 4096))),
   };
   saveJson(STORAGE.settings, state.settings);
-  if (DIRECT && els.apiKey && els.apiKey.value.trim() && els.apiKey.value.trim() !== window.SOMGPT_DIRECT_KEY) {
-    setApiKey(els.apiKey.value.trim());
-  }
   showToast('Settings saved');
 }
 
