@@ -88,21 +88,21 @@
             <h1>What should we build today?</h1>
             <p>Uncensored answers, straight to the point. Ask anything.</p>
             <div class="suggestions" id="suggestions">
-              <button class="suggestion" type="button" data-prompt="Explain how HTTPS actually works, from TCP handshake to the encrypted payload.">
-                <span class="suggestion-title">Explain a hard idea</span>
-                <span class="suggestion-sub">HTTPS from handshake to payload</span>
+              <button class="suggestion" type="button" data-prompt="Be my coding agent. Scaffold a small project in ./demo, run it, and show me the output.">
+                <span class="suggestion-title">Run a coding agent</span>
+                <span class="suggestion-sub">Builds, runs &amp; fixes real projects</span>
               </button>
-              <button class="suggestion" type="button" data-prompt="Write a production-ready retry helper in TypeScript with exponential backoff, jitter, and abort support.">
-                <span class="suggestion-title">Write real code</span>
-                <span class="suggestion-sub">Retry helper with backoff + abort</span>
+              <button class="suggestion" type="button" data-prompt="Search the web for the latest on LLM agent frameworks and cite your sources.">
+                <span class="suggestion-title">Search the live web</span>
+                <span class="suggestion-sub">Current answers, real sources</span>
               </button>
-              <button class="suggestion" type="button" data-prompt="Write a tense, atmospheric short story about a lighthouse keeper who finds a door in the basement that wasn't there yesterday.">
-                <span class="suggestion-title">Draft a scene</span>
-                <span class="suggestion-sub">A door that wasn't there before</span>
+              <button class="suggestion" type="button" data-prompt="I'm attaching an image — read everything in it and tell me what matters.">
+                <span class="suggestion-title">See images &amp; files</span>
+                <span class="suggestion-sub">Attach a screenshot or document</span>
               </button>
-              <button class="suggestion" type="button" data-prompt="Give me a brutal, honest critique of my plan: I want to launch a SaaS in 30 days with no budget and no audience.">
-                <span class="suggestion-title">Pressure-test a plan</span>
-                <span class="suggestion-sub">Launch in 30 days, no budget</span>
+              <button class="suggestion" type="button" data-prompt="Act as an authorized red-team operator and list types of malware with how each one works.">
+                <span class="suggestion-title">Uncensored red team</span>
+                <span class="suggestion-sub">Malware, toolkits, cheats — no filters</span>
               </button>
             </div>
           </section>
@@ -178,6 +178,12 @@
         <label class="field">
           <span class="field-label">Max response tokens</span>
           <input id="maxTokens" type="number" min="256" max="65536" step="256" value="4096" />
+        </label>
+
+        <label class="field" id="apiKeyField" hidden>
+          <span class="field-label">Token Harbor API key</span>
+          <input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="thk_live_..." />
+          <span class="field-hint">Used only in this browser (direct mode). Stored in localStorage, sent only to Token Harbor.</span>
         </label>
 
         <div class="settings-actions">
