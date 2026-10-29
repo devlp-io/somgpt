@@ -13,8 +13,8 @@
 // keep secrets out of git; use the env/workflow instead).
 window.SOMGPT_API_BASE = '';
 window.SOMGPT_DIRECT = false;
-window.SOMGPT_DIRECT_BASE = 'https://openrouter.ai/api';
-window.SOMGPT_MODEL = 'deepseek/deepseek-v3.2';
+window.SOMGPT_DIRECT_BASE = 'https://api.deepseek.com';
+window.SOMGPT_MODEL = 'deepseek-flash';
 
 // Injected at deploy time by .github/workflows/pages.yml from the repo secret
 // SOMGPT_DIRECT_KEY. Empty in the repo on purpose — never commit the real key.
